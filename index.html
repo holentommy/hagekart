@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Ravnkollen Planter & Bed</title>
+    <link rel="stylesheet" href="https://unpkg.com" />
+    <style>
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: #2f3542; color: #fff; }
+        #sidebar { width: 340px; background: #2f3542; border-right: 2px solid #57606f; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; z-index: 1000; }
+        #map { flex-grow: 1; height: 100%; }
+        h2 { font-size: 20px; margin: 0 0 5px 0; color: #2ed573; text-transform: uppercase; }
+        p.help { font-size: 11px; color: #a4b0be; margin-bottom: 15px; margin-top: 0; }
+        
+        .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        button { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #57606f; color: white; }
+        .btn-active { border: 2px solid white; background: #1e90ff; }
+        
+        #input-form-container { background: #57606f; padding: 12px; border-radius: 6px; margin-bottom: 15px; display: none; border-left: 4px solid #ffa500; }
+        input, select, textarea { width: 100%; padding: 8px; margin-bottom: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #747d8c; background: #2f3542; color: #fff; }
+        
+        #plant-list { flex-grow: 1; overflow-y: auto; list-style: none; padding: 0; margin: 0; margin-bottom: 15px; }
+        .plant-item { background: #57606f; padding: 12px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; position: relative; border-left: 6px solid #1e90ff; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; color: #ff4757; cursor: pointer; font-weight: bold; }
+        
+        .io-buttons { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #57606f; padding-top: 15px; }
+        .btn-export { background: #2ed573; color: white; }
+        .btn-import { background: #747d8c; color: white; }
+        #import-file { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>Ravnkollen</h2>
+        <p class="help">💡 Tips: Bruk piltastene på tastaturet for å flytte kartet mens du tegner!</p>
+        
+        <div class="btn-group">
+            <button id="mode-marker" class="btn-active" onclick="setMode('marker')">📍 Plante</button>
+            <button id="mode-polygon" onclick="setMode('polygon')">⬡ Bed</button>
+        </div>
+
+        <div id="input-form-container">
+            <h4 style="margin:0 0 8px 0; color:#ffa500;">Ny registrering</h4>
+            <input type="text" id="plant-name" placeholder="Navn (f.eks. Rosebed)">
+            <select id="plant-season">
+                <option value="Vår">Beskjæres: Vår</option>
+                <option value="Forsommer">Beskjæres: Forsommer</option>
+                <option value="Sensommer">Beskjæres: Sensommer</option>
+                <option value="Høst">Beskjæres: Høst</option>
+            </select>
+            <textarea id="plant-info" placeholder="Tilleggsinfo..."></textarea>
+            <button onclick="saveCurrentItem()" style="background:#1e90ff;">Lagre på kartet</button>
+        </div>
+
+        <input type="text" id="search" placeholder="Søk i planter..." onkeyup="filterPlants()">
+        
+        <ul id="plant-list"></ul>
+
+        <!-- Ny seksjon for data-håndtering -->
+        <div class="io-buttons">
+            <button class="btn-export" onclick="exportData()">📥 Eksporter kartdata (JSON)</button>
+            <button class="btn-import" onclick="document.getElementById('import-file').click()">📤 Importer kartdata</button>
+            <input type="file" id="import-file" accept=".json" onchange="importData(event)">
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com"></script>
+    <script src="app.js"></script>
+</body>
+</html>
